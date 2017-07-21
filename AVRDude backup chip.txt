@@ -1,0 +1,2 @@
+avrdude -c usbasp -p atmega328p -U eeprom:r:eeprom.IntelHex:i -U flash:r:flash.IntelHex:i -U lock:r:lock.IntelHex:i -U lfuse:r:lfuse.IntelHex:i -U hfuse:r:hfuse.IntelHex:i -U efuse:r:efuse.IntelHex:i -U signature:r:signature.IntelHex:i -U calibration:r:calibration.IntelHex:i
+
