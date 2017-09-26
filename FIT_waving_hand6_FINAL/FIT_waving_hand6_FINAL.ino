@@ -49,9 +49,13 @@ const byte SERVO_LEFTRIGHT_PIN = 6;
 const byte LDR_PIN = A1;
 
 //analog readings
-byte bitsOfResolution = 12; //commanded oversampled resolution
+//TUNE THESE PARAMETERS TO PRODUCE THE BEST LIGHT SENSOR SENSITIVITY
+byte bitsOfResolution = 13; //commanded oversampled resolution
 unsigned long numSamplesToAvg = 5; //number of samples AT THE OVERSAMPLED RESOLUTION that you want to take and average
 ADC_speed_t ADCSpeed = ADC_FAST; 
+//For use inside the "sampleLightSensor()" function
+const int LIGHT_READING_DELTA_TRIGGER = 5; //person detection trigger setting <--GS TUNE THIS VALUE 
+const byte NUM_READINGS = 10; //for data smoothing 
 
 //Servos
 const byte NUMSERVOS = 2;
@@ -154,7 +158,7 @@ void waveHand()
   //New method:
   writeServos(SERVO_UP, SERVO_CENTER);
   //wave a few times 
-  for (byte i=0; i<4; i++)
+  for (byte i=0; i<5; i++)
   {
     writeServos(SERVO_UP, SERVO_LEFT);
     writeServos(SERVO_UP, SERVO_RIGHT);
@@ -163,7 +167,7 @@ void waveHand()
   writeServos(SERVO_DOWN, SERVO_CENTER);
   
   // delay(100); //settling delay to let servos totally stop moving, so they don't produce noise on the Vcc line which affects the light sensor readings 
-  initializeLightSensor(350); //NB: if the hand keeps waving again every time it finishes waving, for no visible reason whatsoever, increase this time period; test this by quickly blocking the light sensor by holding your hand in front of it. The hand should not keep repeatedly waving each time it finishes a wave. If it does, increase this time period to let the filter take effect, accumulating new data without continually waving. Quickly blocking the light and holding your hand there forever should induce one single wave function cycle, not repeated calls to the waveHand() function.
+  initializeLightSensor(700); //NB: if the hand keeps waving again every time it finishes waving, for no visible reason whatsoever, increase this time period; test this by quickly blocking the light sensor by holding your hand in front of it. The hand should not keep repeatedly waving each time it finishes a wave. If it does, increase this time period to let the filter take effect, accumulating new data without continually waving. Quickly blocking the light and holding your hand there forever should induce one single wave function cycle, not repeated calls to the waveHand() function.
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -206,7 +210,10 @@ void loop()
   sampleLightSensor(&personArrived);
   if (personArrived)
   {
-    Serial.println("personArrived");
+    //count and print how often this happens 
+    static unsigned long count = 0;
+    count++;
+    Serial.print(F("Person Arrived; count = ")); Serial.println(count);
     personArrived = false; //reset 
     waveHand();
   }
@@ -233,12 +240,12 @@ void sampleLightSensor(bool *triggerNow_p)
     static unsigned int lightReading = adc.newAnalogRead(LDR_PIN);
     // Serial.println(lightReading); //FOR DEBUGGING 
     static unsigned int lightReading_old = lightReading;
-    const int LIGHT_READING_DELTA_TRIGGER = 10; //<--GS TUNE THIS VALUE 
+    // const int LIGHT_READING_DELTA_TRIGGER = 5; //<--GS TUNE THIS VALUE 
     
     //take new reading & do some smoothing
     //-see here for an excellent smoothing example: https://www.arduino.cc/en/Tutorial/Smoothing
     //-TODO-FINISH YOUR SMOOTHING LIBRARY SO YOU CAN JUST START USING IT INSTEAD IN THE FUTURE! ~GS
-    const byte NUM_READINGS = 5;
+    // const byte NUM_READINGS = 5;
     static unsigned int readings[NUM_READINGS];
     static unsigned int readIndex = 0;
     static unsigned long total = 0;
@@ -292,11 +299,11 @@ void sampleLightSensor(bool *triggerNow_p)
     // Serial.print(F(", lightReadingChange = ")); Serial.println(lightReadingChange);
     
     //print debugging data for serial plotter
-    #define SCALING_FACTOR 100L
+    #define SCALING_FACTOR 50L
     Serial.print((long)LIGHT_READING_DELTA_TRIGGER*SCALING_FACTOR); Serial.print(", "); //plot lower trigger threshold
     Serial.print(-(long)LIGHT_READING_DELTA_TRIGGER*SCALING_FACTOR); Serial.print(", "); //plot upper trigger threshold
     Serial.print((long)lightReadingChange*SCALING_FACTOR); Serial.print(", "); //plot derivative value 
-    Serial.println(lightReading); //plot raw light reading 
+    Serial.println((long)lightReading/10); //plot raw light reading 
     //OR
     // Serial.print(LIGHT_READING_DELTA_TRIGGER); Serial.print(", "); //plot lower trigger threshold
     // Serial.print(-LIGHT_READING_DELTA_TRIGGER); Serial.print(", "); //plot upper trigger threshold

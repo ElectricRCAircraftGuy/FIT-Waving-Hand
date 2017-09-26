@@ -1,7 +1,8 @@
 
 By Gabriel Staples  
 www.ElectricRCAircraftGuy.com  
-25 Sept. 2017  
+Written: 25 Sept. 2017  
+Updated: 26 Sept. 2017 
 
 ## Background:  
 
@@ -31,6 +32,15 @@ Many parts of this contraption are hot-glued together. As I learned from FliteTe
 
 ## Does the new source code for the contraption work?  
 
-TBD.  
+YES! It works 100x better than the previous version programmed before! It's not perfect, but it works. It detects peoples' shadows very well, and with my basic DSP I've implemented (including oversampling, averages, and moving averages) is very sensitive to even minor changes in light intensity. Since it operates on the derivative of the light reading, it works in multiple light conditions, as opposed to a pure reading threshold system which would stop working under changing light conditions.  
+
+**The false positives:**  
+If the lights are turned off, it also thinks it is a shadow from a person walking by, and activates. 
+If the doorway at the end of the adjacent hallway is opened and closed, extra sunlight comes in, and when the door closes, it also sometimes sees this decrease in light as a shadow, and falsely goes off. Nevertheless, it works very well overall!  
+
+Have fun at FIT! Come and visit to check it out! :)  
+
+Gabriel Staples  
+www.ElectricRCAircraftGuy.com  
 
 
