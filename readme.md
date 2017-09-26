@@ -25,6 +25,12 @@ So, I decided to fix it. I want it to not only work, but work well. I want it to
 
 So let's get to work!  
 
-## Does it work?  
+## Tips:  
+
+Many parts of this contraption are hot-glued together. As I learned from FliteTest a few years back, if you ever need to separate hot glue bonds, just drop denatured alcohol onto the joints and it will wick into the hot glue joints and cause them to easily separate and pop apart.  
+
+## Does the new source code for the contraption work?  
 
 TBD.  
+
+
