@@ -4,6 +4,10 @@ www.ElectricRCAircraftGuy.com
 Written: 25 Sept. 2017  
 Updated: 26 Sept. 2017 
 
+## Demo Video:
+
+https://photos.app.goo.gl/0INgZfgUfY4nkPjB2
+
 ## Background:  
 
 This is a gimmicky trinket I programmed at the Florida Institute of Technology (FIT). It sits in Lab 116 (Dynamic Systems, Controls, and Mechatronics lab) of the Olin Engineering Building, where I worked part time from approx. July 2017 to 25 Sept. 2017, on the RINGS firmware and project. 
